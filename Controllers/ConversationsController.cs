@@ -44,39 +44,39 @@ namespace ChatApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConversationDto>>> GetMyConversations()
         {
-            var userId = GetUserId();
-            var convs = await _convRepo.GetUserConversationsAsync(userId);
-            var dtos = new List<ConversationDto>();
-            foreach (var c in convs)
-            {
-                var parts = await _partRepo.GetParticipantsByConversationAsync(c.ConversationId);
-                var userDtos = parts.Select(p => new UserDto(
-                    p.User.UserId, p.User.Username, p.User.Email, p.User.AvatarUrl, p.User.IsOnline, p.User.LastSeen
-                )).ToList();
-                var lastMsg = c.Messages.Where(msg=> !msg.IsDeleted).OrderByDescending(m => m.SentAt).FirstOrDefault();
-                MessageDto? lastDto = null;
-                if (lastMsg != null)
+                var userId = GetUserId();
+                var convs = await _convRepo.GetUserConversationsAsync(userId);
+                var dtos = new List<ConversationDto>();
+                foreach (var c in convs)
                 {
-                    var sender = await _userRepo.GetByIdAsync(lastMsg.SenderId);
-                    lastDto = new MessageDto(
-                        lastMsg.MessageId, lastMsg.ConversationId,
-                        new UserDto(sender!.UserId, sender.Username, sender.Email, sender.AvatarUrl, sender.IsOnline, sender.LastSeen),
-                        lastMsg.Content, lastMsg.MessageType, lastMsg.SentAt,
-                        lastMsg.ReplyToMessageId, null, null,
-                        new List<AttachmentDto>(),
-                        new Dictionary<string, int>(),
-                        null,
-                        lastMsg.ReadStatuses?.Count ?? 0,
-                        parts.Count
-                    );
+                    var parts = await _partRepo.GetParticipantsByConversationAsync(c.ConversationId);
+                    var userDtos = parts.Select(p => new UserDto(
+                        p.User.UserId, p.User.Username, p.User.Email, p.User.AvatarUrl, p.User.IsOnline, p.User.LastSeen
+                    )).ToList();
+                    var lastMsg = c.Messages.Where(msg=> !msg.IsDeleted).OrderByDescending(m => m.SentAt).FirstOrDefault();
+                    MessageDto? lastDto = null;
+                    if (lastMsg != null)
+                    {
+                        var sender = await _userRepo.GetByIdAsync(lastMsg.SenderId);
+                        lastDto = new MessageDto(
+                            lastMsg.MessageId, lastMsg.ConversationId,
+                            new UserDto(sender!.UserId, sender.Username, sender.Email, sender.AvatarUrl, sender.IsOnline, sender.LastSeen),
+                            lastMsg.Content, lastMsg.MessageType, lastMsg.SentAt,
+                            lastMsg.ReplyToMessageId, null, null,
+                            new List<AttachmentDto>(),
+                            new Dictionary<string, int>(),
+                            null,
+                            lastMsg.ReadStatuses?.Count ?? 0,
+                            parts.Count
+                        );
+                    }
+
+                    // ✅ Get unread count
+                    var unreadCount = await _readStatusRepo.GetUnreadCountAsync(c.ConversationId, userId);
+
+                    dtos.Add(new ConversationDto(c.ConversationId, c.Type, c.GroupName, c.GroupAvatarUrl, userDtos, lastDto, unreadCount));
                 }
-
-                // ✅ Get unread count
-                var unreadCount = await _readStatusRepo.GetUnreadCountAsync(c.ConversationId, userId);
-
-                dtos.Add(new ConversationDto(c.ConversationId, c.Type, c.GroupName, c.GroupAvatarUrl, userDtos, lastDto, unreadCount));
-            }
-            return Ok(dtos);
+                return Ok(dtos);
         }
 
         [HttpPost]

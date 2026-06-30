@@ -1,23 +1,56 @@
+//{
+//  "profiles": {
+//    "http": {
+//      "commandName": "Project",
+//      "launchBrowser": true,
+//      "launchUrl": "swagger",
+//      "applicationUrl": "http://192.168.0.164:5204;https://192.168.0.164:5204",
+//      "environmentVariables": {
+//        "ASPNETCORE_ENVIRONMENT": "Development"
+//      }
+//    },
+//    "https": {
+//      "commandName": "Project",
+//      "launchBrowser": true,
+//      "launchUrl": "swagger",
+//      "applicationUrl": "https://192.168.0.164:5204",
+//      "environmentVariables": {
+//        "ASPNETCORE_ENVIRONMENT": "Development"
+//      }
+//    },
+//    "Container (.NET SDK)": {
+//      "commandName": "SdkContainer",
+//      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+//      "environmentVariables": {
+//        "ASPNETCORE_HTTPS_PORTS": "8081",
+//        "ASPNETCORE_HTTP_PORTS": "8080"
+//      },
+//      "publishAllPorts": true,
+//      "useSSL": true
+//    }
+//  },
+//  "$schema": "https://json.schemastore.org/launchsettings.json"
+//}
+
 {
   "profiles": {
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      // "applicationUrl": "http://localhost:5204",
-      //"applicationUrl": "http://192.168.0.164:5204",
-      "applicationUrl": "http://192.168.100.83:5204",
+      "applicationUrl": "http://192.168.0.164:5204",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
       "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://192.168.0.164:5204",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7239;http://localhost:5204"
+      }
     },
     "Container (.NET SDK)": {
       "commandName": "SdkContainer",

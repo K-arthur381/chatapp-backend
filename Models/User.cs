@@ -10,7 +10,7 @@
         public string? LastName { get; set; }
         public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? LastSeen { get; set; }
+        public DateTime LastSeen { get; set; }  = DateTime.UtcNow;
         public bool IsOnline { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
 

@@ -29,4 +29,12 @@ public class ParticipantRepository : GenericRepository<Participant>, IParticipan
         return await _dbSet
             .FirstOrDefaultAsync(p => p.ConversationId == conversationId && p.UserId == userId);
     }
+
+    public async Task<List<Participant>> GetParticipantsListAsync(Guid conversationId)
+    {
+        return await _dbSet
+            .Where(p => p.ConversationId == conversationId)
+            .Include(p => p.User)
+            .ToListAsync();
+    }
 }

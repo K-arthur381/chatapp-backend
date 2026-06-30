@@ -33,6 +33,8 @@ public class ChatHub : Hub
         foreach (var id in convIds)
             await Groups.AddToGroupAsync(Context.ConnectionId, $"conv-{id}");
 
+        await _notification.DeliverPendingNotificationsAsync(userId);
+
         await base.OnConnectedAsync();
     }
 
@@ -54,7 +56,9 @@ public class ChatHub : Hub
         var message = await _chatService.SaveMessage(userId, dto);
         await Clients.Group($"conv-{dto.ConversationId}").SendAsync("NewMessage", message);
         // Trigger notification (fire and forget)
-        _ = _notification.SendMessageNotification(new Message { MessageId = message.MessageId });
+        await _notification.SendMessageNotificationAsync(
+        new Message { MessageId = message.MessageId, ConversationId = dto.ConversationId, Content = dto.Content },
+        userId );
     }
 
     public async Task TypingIndicator(Guid conversationId, bool isTyping)

@@ -1,6 +1,5 @@
 ﻿using ChatApp.Api.Models;
 using Microsoft.EntityFrameworkCore;
-
 namespace ChatApp.Api.Data;
 
 public class AppDbContext : DbContext
@@ -16,10 +15,19 @@ public class AppDbContext : DbContext
     public DbSet<MessageReadStatus> MessageReadStatus => Set<MessageReadStatus>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Announcement> Announcements => Set<Announcement>();
+    public DbSet<UserDevice> UserDevices => Set<UserDevice>();
+    public DbSet<PendingNotification> PendingNotifications => Set<PendingNotification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        modelBuilder.Entity<PendingNotification>(entity =>
+        {
+            entity.HasKey(x => x.PendingId);
+        });
+
+       
     }
 }

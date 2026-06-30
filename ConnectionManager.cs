@@ -24,6 +24,9 @@ public class ConnectionManager
 
     public HashSet<string> GetConnections(Guid userId) =>
         UserConnections.TryGetValue(userId, out var set) ? set : new HashSet<string>();
-
+    public bool IsUserOnline(Guid userId)
+    {
+        return UserConnections.ContainsKey(userId) && UserConnections[userId].Count > 0;
+    }
     public IEnumerable<Guid> GetOnlineUsers() => UserConnections.Keys;
 }
